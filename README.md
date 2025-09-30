@@ -16,9 +16,9 @@ source .venv/bin/activate
 pip install --upgrade pip
 
 # 4. Install dependencies
-pip install scikit-learn numpy matplotlib pandas scipy
+pip install scikit-learn numpy matplotlib pandas scipy pymc
 
 # 5. Verify installation
-python -c "import sklearn, numpy, matplotlib, pandas, scipy; print('All packages installed successfully!')"
+python -c "import sklearn, numpy, matplotlib, pandas, scipy, pymc; print('All packages installed successfully!')"
 
 
