@@ -38,10 +38,11 @@ with pm.Model() as model_lv:
     # Priors
     a = pm.HalfNormal("a", 1.0)
     b = pm.HalfNormal("b", 1.0)
-    # Likelihood (ABC)
+    # Likelihood (ABC). Epsilon is the initial tolerance
     sim = pm.Simulator("sim", competition_model, params=(a, b), epsilon=10, observed=observed)
     # Inference
     samples = pm.sample_smc()
+    # samples = pm.sample_smc(draws=500, chains=1) # Faster for testing
     # Convert to ArviZ InferenceData
     posterior = samples.posterior.stack(samples=("draw", "chain"))
     # post = posterior.to_pandas()
