@@ -5,18 +5,13 @@ import pymc as pm
 from scipy.integrate import odeint
 
 # Step 1: Model parameters and initial conditions
-a_true = 1.0
-b_true = 0.1
 c = 1.5
 d = 0.75
-X0 = [10.0, 5.0]
-size = 100
-time = 15
-t = np.linspace(0, time, size)
 
 # Step 2: read from file and store into t and observed_vector
 data = np.loadtxt("observed_data.csv", delimiter=",", skiprows=1)
 t = data[:, 0]
+X0 = data[0, 1:]  # Initial condition from the first row of data
 observed_vector = data[:, 1]  # Only the first species is observed
 observed = observed_vector  # A vector 1D for PyMC
 
@@ -39,7 +34,7 @@ with pm.Model() as model_lv:
     a = pm.HalfNormal("a", 1.0)
     b = pm.HalfNormal("b", 1.0)
     # Likelihood (ABC). Epsilon is the initial tolerance
-    sim = pm.Simulator("sim", competition_model, params=(a, b), epsilon=10, observed=observed)
+    sim = pm.Simulator("sim", competition_model, params=(a, b), epsilon=15, observed=observed)
     # Inference
     # samples = pm.sample_smc()
     samples = pm.sample_smc(draws=500, chains=3) # Faster for testing
