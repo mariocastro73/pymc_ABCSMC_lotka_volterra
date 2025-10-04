@@ -49,6 +49,7 @@ with pm.Model() as model_seir:
     posterior = samples.posterior.stack(samples=("draw", "chain"))
     # post = posterior.to_pandas()
 
+az.summary(samples, hdi_prob=0.95)
 
 # Plotting
 ## Plot posterior predictive
@@ -82,11 +83,12 @@ ax.legend()
 plt.show()
 
 ## Plot posterior distributions
-az.plot_posterior(samples)
+# az.plot_posterior(samples)
+az.plot_posterior(samples, kind="hist", bins=30)
 plt.show()
 
 ## Plot diagnostics
 # az.plot_trace(samples, kind="rank_vlines")
-az.plot_trace(samples)
+az.plot_trace(samples, kind="rank_bars")
 plt.show()
 

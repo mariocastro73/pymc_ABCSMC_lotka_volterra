@@ -69,6 +69,7 @@ ax.legend()
 plt.show()
 
 ## Plot posterior distributions
+plt.figure(figsize=(8, 6))
 # az.plot_posterior(samples)
 az.plot_posterior(samples, kind="hist", bins=30)
 plt.show()
@@ -102,7 +103,9 @@ plt.title("KDE of Posterior Samples for a and b")
 plt.show()
 
 plt.figure(figsize=(8, 6))
+plt.figure(figsize=(8, 6))
 az.plot_autocorr(samples)
+plt.show()
 
 
 
