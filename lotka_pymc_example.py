@@ -36,12 +36,13 @@ with pm.Model() as model_lv:
     # Likelihood (ABC). Epsilon is the initial tolerance
     sim = pm.Simulator("sim", competition_model, params=(a, b), epsilon=10, observed=observed)
     # Inference
-    # samples = pm.sample_smc()
-    samples = pm.sample_smc(draws=500, chains=3) # Faster for testing
+    samples = pm.sample_smc()
+    # samples = pm.sample_smc(draws=500, chains=3) # Faster for testing
     # Convert to ArviZ InferenceData
     posterior = samples.posterior.stack(samples=("draw", "chain"))
     # post = posterior.to_pandas()
 
+az.summary(samples, hdi_prob=0.95)
 
 # Plotting
 ## Plot posterior predictive
@@ -68,10 +69,40 @@ ax.legend()
 plt.show()
 
 ## Plot posterior distributions
-az.plot_posterior(samples)
+# az.plot_posterior(samples)
+az.plot_posterior(samples, kind="hist", bins=30)
 plt.show()
 
 ## Plot diagnostics
+plt.figure(figsize=(8, 6))
 # az.plot_trace(samples, kind="rank_vlines")
 az.plot_trace(samples)
+# az.plot_trace(samples, kind="rank_bars")
+plt.suptitle(f"Trace Plot");
 plt.show()
+
+# az.plot_violin(samples)
+
+# with variables a and b in variable posterior, plot a heatmap
+plt.figure(figsize=(8, 6))
+plt.hist2d(posterior["a"].values, posterior["b"].values, bins=100, cmap="Blues")
+plt.colorbar(label="Counts")
+plt.xlabel("a")
+plt.ylabel("b")
+plt.title("2D Histogram of Posterior Samples for a and b")
+plt.show()
+
+# same but with kde
+plt.figure(figsize=(8, 6))
+az.plot_kde(posterior["a"].values, posterior["b"].values, fill_last=True)
+# az.plot_kde(posterior["a"].values, posterior["b"].values, hdi_probs=[0.05, 0.5, 0.95])
+plt.xlabel("a")
+plt.ylabel("b")
+plt.title("KDE of Posterior Samples for a and b")
+plt.show()
+
+plt.figure(figsize=(8, 6))
+az.plot_autocorr(samples)
+
+
+
